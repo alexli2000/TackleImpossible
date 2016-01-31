@@ -81,9 +81,6 @@ func setSafeToDriveNotification() {
     notification.fireDate = date
     notification.soundName = UILocalNotificationDefaultSoundName
     UIApplication.sharedApplication().scheduleLocalNotification(notification)
-    
-    print("Notification set for \(notification.fireDate)")
-    print(UIApplication.sharedApplication().scheduledLocalNotifications?.count)
 }
 
 func getBACFromTimeUntilSafeToDrive(hours:Float) -> Float {

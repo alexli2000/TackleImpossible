@@ -42,6 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
         setSafeToDriveNotification()
         setLeavePremiseNotification()
+        
+        print(application.scheduledLocalNotifications?.count)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
