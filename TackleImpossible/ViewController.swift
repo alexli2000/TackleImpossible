@@ -21,7 +21,6 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     var loader = FillableLoader()
     var progressCircle = CAShapeLayer()
 
-    
     var addedDrinks = 0
     
     let healthKitStore:HKHealthStore = HKHealthStore()
@@ -29,7 +28,7 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
-        bac = 0.09
+        bac = Float(arc4random_uniform(11) + 1)/100
         presentLoader()
     }
     
@@ -78,8 +77,13 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         let settingsButton = UIButton()
         settingsButton.setImage(UIImage(named: "settings"), forState: .Normal)
         settingsButton.addTarget(self, action: "pushToSettings", forControlEvents: .TouchUpInside)
-        settingsButton.center = CGPoint(x: UIScreen.mainScreen().bounds.width - buffer/2, y: buffer/2)
+        settingsButton.frame = CGRect(x: 0, y: 0, width: 26, height: 26)
+        settingsButton.center = CGPoint(x: UIScreen.mainScreen().bounds.width - buffer/3, y: buffer/3)
         view.addSubview(settingsButton)
+    }
+    
+    func pushToSettings() {
+        self.performSegueWithIdentifier("presentSettingsSegue", sender: nil)
     }
     
     func configureBACProgress() {
@@ -110,7 +114,6 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         let circleAnim = CABasicAnimation(keyPath: "strokeEnd")
         circleAnim.duration = 1.5
         circleAnim.repeatCount = 1
-        
         circleAnim.fromValue = 0
         circleAnim.toValue = circleEndFromBAC()
         
@@ -134,9 +137,7 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     }
     
     func configureBACLabel() {
-        if let currentView = view.viewWithTag(3) {
-            currentView.removeFromSuperview()
-        }
+        
         let bacLabel = SpringLabel()
         bacLabel.text = stringOfBAC(bac!, addedDrinks: addedDrinks) + "%"
         bacLabel.textColor = circleColorFromBAC()
@@ -288,13 +289,13 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     }
     
     func removeAnimatingViews() {
-        if let currentView = view.viewWithTag(5) {
-            currentView.removeFromSuperview()
+        
+        for subview in view.subviews {
+            if subview.tag == 3 || subview.tag == 5 || subview.tag == 6 {
+                subview.removeFromSuperview()
+            }
         }
         
-        if let currentView = view.viewWithTag(6) {
-            currentView.removeFromSuperview()
-        }
     }
     
     func circleEndFromBAC() -> Float {
@@ -371,6 +372,15 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         configureViews()
     }
 
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "presentSettingsSegue" {
+            
+        }
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 }
 
 extension ViewController {

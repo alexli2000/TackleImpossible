@@ -109,6 +109,15 @@ func additionalBACPerDrinkUnit() -> Float {
 }
 
 func calculateBACForCurrentUser(numberOfDrinks:Int, hoursSinceCommencement:Float) -> Float {
+    
+    if NSUserDefaults.standardUserDefaults().floatForKey("userWeight") < 10 {
+        NSUserDefaults.standardUserDefaults().setObject(50, forKey: "userWeight")
+    }
+    
+    if NSUserDefaults.standardUserDefaults().objectForKey("weightUnits") == nil {
+        NSUserDefaults.standardUserDefaults().setObject("kg", forKey: "weightUnits")
+    }
+    
     return calculateBACForIndividualWith(NSUserDefaults.standardUserDefaults().boolForKey("userGender"), numberOfDrinks: numberOfDrinks, hoursSinceCommencement: hoursSinceCommencement, weightInKG: NSUserDefaults.standardUserDefaults().floatForKey("userWeight"))
 }
 
@@ -121,6 +130,22 @@ func calculateBACForIndividualWith(male:Bool, numberOfDrinks:Int, hoursSinceComm
 }
 
 
-
+func usersWeightInKG() -> Float? {
+    if let units = NSUserDefaults.standardUserDefaults().objectForKey("weightUnits") as? String {
+        if units == "kg" {
+            return NSUserDefaults.standardUserDefaults().floatForKey("userWeight")
+        } else if units == "lb" {
+            return NSUserDefaults.standardUserDefaults().floatForKey("userWeight")*0.453592
+        } else if units == "st" {
+            return NSUserDefaults.standardUserDefaults().floatForKey("userWeight")*6.35029
+        } else {
+            print("Could not determine wegiht units")
+            return nil
+        }
+    } else {
+        print("No units set!")
+        return nil
+    }
+}
 
 
