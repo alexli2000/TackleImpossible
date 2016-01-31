@@ -422,6 +422,11 @@
 					FAB48C7D1C5D4780009D2615 = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = 2846644Q3N;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					FAB48C911C5D4780009D2615 = {
 						CreatedOnToolsVersion = 7.2;

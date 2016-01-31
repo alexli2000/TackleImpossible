@@ -7,26 +7,27 @@
 //
 
 import UIKit
+import MessageUI
 
 class ViewController: UIViewController {
 
-    let radius = 3*UIScreen.mainScreen().bounds.width/8
+    let radius = 3*UIScreen.mainScreen().bounds.width/10
     let buffer = UIScreen.mainScreen().bounds.width/4
     
-    var bac:Double?
-    
+    var bac:Float?
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
-        bac = 0.05
+        bac = 0.041
         configureBACBackground()
         configureBACProgress()
         configureAlternativeButtons()
+        replaceSafeToDriveDate(hoursToReachDrivingLimitOfAlcohol(bac!))
     }
     
     func configureBACBackground() {
@@ -57,6 +58,7 @@ class ViewController: UIViewController {
         let circle = CAShapeLayer()
         circle.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: 2*radius, height: 2*radius)).CGPath
         circle.position = CGPoint(x: CGRectGetMidX(self.view.frame) - radius, y: buffer)
+        
 //        circle.anchorPoint = CGPoint(x: circle.bounds.width/2, y: circle.bounds.height/2)
 //        var transform = CATransform3DMakeRotation(CGFloat(M_PI_4), 0, 0, 1.0)
 //        transform.m34 = 0.0015
@@ -83,7 +85,7 @@ class ViewController: UIViewController {
         circleColorAnim.duration = 2
         circleAnim.repeatCount = 1
         circleAnim.delegate = self
-        circleColorAnim.fromValue = UIColor.greenColor().CGColor
+        circleColorAnim.fromValue = green.CGColor
         circleColorAnim.toValue = circleColorFromBAC().CGColor
         
         circle.addAnimation(circleAnim, forKey: "drawCircleAnimation")
@@ -111,6 +113,12 @@ class ViewController: UIViewController {
     }
     
     func configureAlternativeButtons() {
+        
+        let lineView = UIView(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 4*UIScreen.mainScreen().bounds.width/5, height: 1)))
+        lineView.backgroundColor = UIColor(red: 0.89, green: 0.89, blue: 0.89, alpha: 1)
+        lineView.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: UIScreen.mainScreen().bounds.height - 100)
+        view.addSubview(lineView)
+        
         let alternatives = ["message", "uber", "taxi"]
         for idx in 0..<alternatives.count {
             let altButton = SpringButton()
@@ -123,7 +131,7 @@ class ViewController: UIViewController {
             altButton.layer.shadowRadius = 3
             altButton.layer.shadowOpacity = 0.5
             altButton.layer.shadowOffset = CGSize(width: 3, height: 3)
-            altButton.center = CGPoint(x: CGFloat(2*idx + 1)*UIScreen.mainScreen().bounds.width/CGFloat(alternatives.count*2), y: UIScreen.mainScreen().bounds.height - 70)
+            altButton.center = CGPoint(x: CGFloat(2*idx + 1)*UIScreen.mainScreen().bounds.width/CGFloat(alternatives.count*2), y: UIScreen.mainScreen().bounds.height - 55)
             view.addSubview(altButton)
             
             switch alternatives[idx] {
@@ -147,9 +155,13 @@ class ViewController: UIViewController {
     
     func configureCarLabel() {
         let carImageView = SpringImageView()
-        carImageView.image = UIImage(named: "car")
+        if hoursToReachDrivingLimitOfAlcohol(Float(bac!)) > 0 {
+            carImageView.image = UIImage(named: "cab")
+        } else {
+            carImageView.image = UIImage(named: "car")
+        }
         carImageView.sizeToFit()
-        carImageView.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: 2*UIScreen.mainScreen().bounds.height/3)
+        carImageView.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: 7*UIScreen.mainScreen().bounds.height/12)
         view.addSubview(carImageView)
         
         carImageView.animation = "slideRight"
@@ -158,12 +170,17 @@ class ViewController: UIViewController {
         carImageView.animate()
         
         let carLabel = SpringLabel()
-        carLabel.text = stringOfTimeUntilRidOfAlcohol(hoursToReachDrivingLimitOfAlcohol(Float(bac!)))
+        carLabel.attributedText = stringOfTimeUntilRidOfAlcohol(hoursToReachDrivingLimitOfAlcohol(Float(bac!)))
+        carLabel.numberOfLines = 0
+        carLabel.textAlignment = .Center
         carLabel.sizeToFit()
+        carLabel.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: 7*UIScreen.mainScreen().bounds.height/12 + 50)
+        
+        view.addSubview(carLabel)
         
     }
     
-    func circleEndFromBAC() -> Double {
+    func circleEndFromBAC() -> Float {
         return bac! / 0.12
     }
     
@@ -174,11 +191,11 @@ class ViewController: UIViewController {
         
         switch bac! {
         case 0...0.04:
-            return UIColor.greenColor()
+            return green
         case 0.04...0.08:
-            return UIColor.yellowColor()
+            return yellow
         case 0.08..<1.0:
-            return UIColor.redColor()
+            return red
         default:
             print("Error setting color of circle")
             return UIColor.clearColor()
@@ -186,15 +203,26 @@ class ViewController: UIViewController {
     }
     
     func openSMS() {
-        
+        let messageVC = MFMessageComposeViewController()
+        messageVC.body = "Hey. I don't think I can drive tonight. Can you give me a ride?"
+        self.presentViewController(messageVC, animated: true, completion: nil)
     }
     
     func openUber() {
-        
+        let url  = NSURL(string: "uber://");
+        if UIApplication.sharedApplication().canOpenURL(url!) == true
+        {
+            UIApplication.sharedApplication().openURL(url!)
+        }
     }
 
     func openPhoneToTaxi() {
-        
+        let url  = NSURL(string: "tel://4167515555");
+        if UIApplication.sharedApplication().canOpenURL(url!) == true
+        {
+            UIApplication.sharedApplication().openURL(url!)
+        }
     }
+
 }
 
