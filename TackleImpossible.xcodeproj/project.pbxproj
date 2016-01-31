@@ -14,6 +14,7 @@
 		FA0765281C5DBBAA003F7016 /* RoundedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765231C5DBBAA003F7016 /* RoundedLoader.swift */; };
 		FA0765291C5DBBAA003F7016 /* SpikeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765241C5DBBAA003F7016 /* SpikeLoader.swift */; };
 		FA07652A1C5DBBAA003F7016 /* WavesLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765251C5DBBAA003F7016 /* WavesLoader.swift */; };
+		FA07652F1C5E0535003F7016 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA07652D1C5E0535003F7016 /* SettingsTableViewController.swift */; };
 		FAB48C821C5D4780009D2615 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB48C811C5D4780009D2615 /* AppDelegate.swift */; };
 		FAB48C841C5D4780009D2615 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB48C831C5D4780009D2615 /* ViewController.swift */; };
 		FAB48C871C5D4780009D2615 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAB48C851C5D4780009D2615 /* Main.storyboard */; };
@@ -114,6 +115,7 @@
 		FA0765231C5DBBAA003F7016 /* RoundedLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedLoader.swift; sourceTree = "<group>"; };
 		FA0765241C5DBBAA003F7016 /* SpikeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpikeLoader.swift; sourceTree = "<group>"; };
 		FA0765251C5DBBAA003F7016 /* WavesLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WavesLoader.swift; sourceTree = "<group>"; };
+		FA07652D1C5E0535003F7016 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		FAB48C7E1C5D4780009D2615 /* TackleImpossible.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TackleImpossible.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAB48C811C5D4780009D2615 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAB48C831C5D4780009D2615 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -244,6 +246,7 @@
 			isa = PBXGroup;
 			children = (
 				FAB48C831C5D4780009D2615 /* ViewController.swift */,
+				FA07652D1C5E0535003F7016 /* SettingsTableViewController.swift */,
 				FAB48CF61C5D4831009D2615 /* Utilities.swift */,
 				FAB48D341C5D676D009D2615 /* Resources */,
 			);
@@ -525,6 +528,7 @@
 				FAB48CEE1C5D47A0009D2615 /* NVActivityIndicatorAnimationPacman.swift in Sources */,
 				FA0765281C5DBBAA003F7016 /* RoundedLoader.swift in Sources */,
 				FAB48CEC1C5D47A0009D2615 /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */,
+				FA07652F1C5E0535003F7016 /* SettingsTableViewController.swift in Sources */,
 				FAB48CD41C5D47A0009D2615 /* NVActivityIndicatorAnimationBallBeat.swift in Sources */,
 				FAB48D301C5D5C04009D2615 /* SpringView.swift in Sources */,
 				FAB48D241C5D5C04009D2615 /* KeyboardLayoutConstraint.swift in Sources */,

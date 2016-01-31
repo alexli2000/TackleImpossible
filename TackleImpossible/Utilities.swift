@@ -15,16 +15,17 @@ let yellow = UIColor(red: 0.9, green: 0.84, blue: 0.46, alpha: 1)
 let red = UIColor(red: 0.86, green: 0.28, blue: 0.28, alpha: 1)
 let beerColor = UIColor(red: 0.78, green: 0.53, blue: 0.16, alpha: 1)
 
-func hoursToRidBodyOfAlcohol(bac:Float) -> Float {
-    return bac/0.015
+func hoursToRidBodyOfAlcohol(bac:Float, addedDrinks:Int) -> Float {
+    let refactoredBAC = bac + additionalBACPerDrinkUnit() * Float(addedDrinks)
+    return refactoredBAC/0.015
 }
 
-func hoursToReachDrivingLimitOfAlcohol(bac:Float) -> Float {
-    return (bac - minimumSafePercentOfAlcohol)/0.015
+func hoursToReachDrivingLimitOfAlcohol(bac:Float, addedDrinks:Int) -> Float {
+    let refactoredBAC = bac + additionalBACPerDrinkUnit() * Float(addedDrinks)
+    return (refactoredBAC - minimumSafePercentOfAlcohol)/0.015
 }
 
 func stringOfTimeUntilRidOfAlcohol(time:Float) -> NSMutableAttributedString {
-    
     
     let firstString = NSMutableAttributedString(string: "YOU'RE ", attributes: [NSForegroundColorAttributeName:UIColor(red: 0.38, green: 0.38, blue: 0.38, alpha: 1)])
     
@@ -46,8 +47,10 @@ func stringOfTimeUntilRidOfAlcohol(time:Float) -> NSMutableAttributedString {
     return firstString
 }
 
-func stringOfBAC(bac:Float) -> String {
-    return(String(format: "%.2f", bac))
+func stringOfBAC(bac:Float, addedDrinks:Int) -> String {
+    let refactoredBAC = bac + additionalBACPerDrinkUnit() * Float(addedDrinks)
+    
+    return(String(format: "%.2f", refactoredBAC))
 }
 
 func replaceSafeToDriveDate(hours:Float) {
@@ -83,6 +86,41 @@ func setSafeToDriveNotification() {
     print(UIApplication.sharedApplication().scheduledLocalNotifications?.count)
 }
 
-func setLeavingPremiseNotification() {
-    
+func getBACFromTimeUntilSafeToDrive(hours:Float) -> Float {
+    return hours * 0.015
 }
+
+func getCurrentBAC() -> Float {
+    guard let date =  NSUserDefaults.standardUserDefaults().objectForKey("safeToDriveDate") as? NSDate else {
+        print("No date available")
+        return 0
+    }
+    
+    if date.compare(NSDate()) == NSComparisonResult.OrderedAscending {
+        print("Notification date has already past")
+        return 0
+    }
+
+    return getBACFromTimeUntilSafeToDrive(Float(date.timeIntervalSinceDate(NSDate())) * 60.0 * 60.0)
+}
+
+func additionalBACPerDrinkUnit() -> Float {
+    return calculateBACForCurrentUser(1, hoursSinceCommencement: 0)
+}
+
+func calculateBACForCurrentUser(numberOfDrinks:Int, hoursSinceCommencement:Float) -> Float {
+    return calculateBACForIndividualWith(NSUserDefaults.standardUserDefaults().boolForKey("userGender"), numberOfDrinks: numberOfDrinks, hoursSinceCommencement: hoursSinceCommencement, weightInKG: NSUserDefaults.standardUserDefaults().floatForKey("userWeight"))
+}
+
+func calculateBACForIndividualWith(male:Bool, numberOfDrinks:Int, hoursSinceCommencement:Float, weightInKG:Float) -> Float {
+    if male {
+        return (Float(10*numberOfDrinks) - 7.5*hoursSinceCommencement)/(6.8*weightInKG)
+    } else {
+        return (Float(10*numberOfDrinks) - 7.5*hoursSinceCommencement)/(5.5*weightInKG)
+    }
+}
+
+
+
+
+

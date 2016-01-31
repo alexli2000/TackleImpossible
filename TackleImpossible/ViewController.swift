@@ -8,6 +8,7 @@
 
 import UIKit
 import MessageUI
+import HealthKit
 
 class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate {
 
@@ -18,30 +19,40 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     
     let path = PocketSVG.pathFromSVGFileNamed("beer120").takeUnretainedValue()
     var loader = FillableLoader()
+    var progressCircle = CAShapeLayer()
+
     
-    var messageVC:MFMessageComposeViewController?
+    var addedDrinks = 0
+    
+    let healthKitStore:HKHealthStore = HKHealthStore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
+        bac = 0.09
+        presentLoader()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
-        bac = 0.07
-        configureViews()
     }
     
     func configureViews() {
         configureBACBackground()
+        configureSettingsButton()
         configureBACProgress()
         configureAlternativeButtons()
-        replaceSafeToDriveDate(hoursToReachDrivingLimitOfAlcohol(bac!))
+        replaceSafeToDriveDate(hoursToReachDrivingLimitOfAlcohol(bac!, addedDrinks: addedDrinks))
+        configureAddDrinkButton()
     }
     
     func configureBACBackground() {
+        
         let circle = CAShapeLayer()
-        circle.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: 2*radius, height: 2*radius)).CGPath
+        
+        let path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: 2*radius, height: 2*radius))
+        
+        circle.path = path.CGPath
         circle.position = CGPoint(x: CGRectGetMidX(self.view.frame) - radius, y: buffer)
         
         circle.fillColor = UIColor.clearColor().CGColor
@@ -55,7 +66,7 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         circle2.path = UIBezierPath(ovalInRect: CGRect(x: 5, y: 5, width: 2*radius-10, height: 2*radius-10)).CGPath
         circle2.position = CGPoint(x: CGRectGetMidX(self.view.frame) - radius, y: buffer)
         
-        circle2.fillColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1).CGColor
+        circle2.fillColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1).CGColor
         circle2.strokeColor = UIColor.clearColor().CGColor
         circle2.lineCap = "round"
         circle2.lineWidth = 10
@@ -63,23 +74,39 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         self.view.layer.addSublayer(circle2)
     }
     
+    func configureSettingsButton() {
+        let settingsButton = UIButton()
+        settingsButton.setImage(UIImage(named: "settings"), forState: .Normal)
+        settingsButton.addTarget(self, action: "pushToSettings", forControlEvents: .TouchUpInside)
+        settingsButton.center = CGPoint(x: UIScreen.mainScreen().bounds.width - buffer/2, y: buffer/2)
+        view.addSubview(settingsButton)
+    }
+    
     func configureBACProgress() {
-        let circle = CAShapeLayer()
-        circle.path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: 2*radius, height: 2*radius)).CGPath
-        circle.position = CGPoint(x: CGRectGetMidX(self.view.frame) - radius, y: buffer)
+        let path = UIBezierPath(ovalInRect: CGRect(x: 0, y: 0, width: 2*radius, height: 2*radius))
         
-//        circle.anchorPoint = CGPoint(x: circle.bounds.width/2, y: circle.bounds.height/2)
-//        var transform = CATransform3DMakeRotation(CGFloat(M_PI_4), 0, 0, 1.0)
-//        transform.m34 = 0.0015
-//        circle.transform = transform
+        let bounds = CGPathGetBoundingBox(path.CGPath)
+        let center = CGPoint(x:CGRectGetMidX(bounds), y:CGRectGetMidY(bounds))
         
-        circle.fillColor = UIColor.clearColor().CGColor
-        circle.strokeColor = circleColorFromBAC().CGColor
-        circle.lineCap = "round"
-        circle.lineWidth = 10
-        circle.strokeEnd = CGFloat(circleEndFromBAC())
+        let toOrigin = CGAffineTransformMakeTranslation(-center.x, -center.y)
+        path.applyTransform(toOrigin)
         
-        self.view.layer.addSublayer(circle)
+        let rotation = CGAffineTransformMakeRotation(CGFloat(-M_PI_2))
+        path.applyTransform(rotation)
+        
+        let fromOrigin = CGAffineTransformMakeTranslation(center.x, center.y)
+        path.applyTransform(fromOrigin)
+        
+        progressCircle.path = path.CGPath
+        progressCircle.position = CGPoint(x: CGRectGetMidX(self.view.frame) - radius, y: buffer)
+        
+        progressCircle.fillColor = UIColor.clearColor().CGColor
+        progressCircle.strokeColor = circleColorFromBAC().CGColor
+        progressCircle.lineCap = "round"
+        progressCircle.lineWidth = 10
+        progressCircle.strokeEnd = CGFloat(circleEndFromBAC())
+        
+        self.view.layer.addSublayer(progressCircle)
         let circleAnim = CABasicAnimation(keyPath: "strokeEnd")
         circleAnim.duration = 1.5
         circleAnim.repeatCount = 1
@@ -97,8 +124,8 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         circleColorAnim.fromValue = green.CGColor
         circleColorAnim.toValue = circleColorFromBAC().CGColor
         
-        circle.addAnimation(circleAnim, forKey: "drawCircleAnimation")
-        circle.addAnimation(circleColorAnim, forKey: "colorCircleAnimation")
+        progressCircle.addAnimation(circleAnim, forKey: "drawCircleAnimation")
+        progressCircle.addAnimation(circleColorAnim, forKey: "colorCircleAnimation")
     }
     
     override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
@@ -107,18 +134,87 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     }
     
     func configureBACLabel() {
+        if let currentView = view.viewWithTag(3) {
+            currentView.removeFromSuperview()
+        }
         let bacLabel = SpringLabel()
-        bacLabel.text = stringOfBAC(bac!) + "%"
+        bacLabel.text = stringOfBAC(bac!, addedDrinks: addedDrinks) + "%"
         bacLabel.textColor = circleColorFromBAC()
         bacLabel.font = UIFont.systemFontOfSize(36)
         bacLabel.sizeToFit()
         bacLabel.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: buffer + radius)
+        bacLabel.tag = 3
         view.addSubview(bacLabel)
         
         bacLabel.animation = "pop"
         bacLabel.duration = 1
         bacLabel.curve = "spring"
         bacLabel.animate()
+    }
+    
+    func configureAddDrinkButton() {
+        let addDrinkButton = SpringButton()
+        let addDrinkImage = UIImage(named: "addDrink")
+        addDrinkButton.setImage(addDrinkImage, forState: .Normal)
+        //addDrinkButton.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
+        addDrinkButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+//        addDrinkButton.layer.cornerRadius = 20
+//        addDrinkButton.layer.shadowColor = UIColor.blackColor().colorWithAlphaComponent(0.5).CGColor
+//        addDrinkButton.layer.shadowRadius = 3
+//        addDrinkButton.layer.shadowOpacity = 0.5
+//        addDrinkButton.layer.shadowOffset = CGSize(width: 3, height: 3)
+        addDrinkButton.center = CGPoint(x: buffer/3, y: buffer + 2*radius/3)
+        view.addSubview(addDrinkButton)
+        
+        addDrinkButton.addTarget(self, action: "addNewDrink", forControlEvents: .TouchUpInside)
+        
+        addDrinkButton.animation = "fadeIn"
+        addDrinkButton.duration = 1
+        addDrinkButton.curve = "spring"
+        addDrinkButton.animate()
+    }
+    
+    func configureRefreshButton() {
+        if let currentView = view.viewWithTag(4) {
+            currentView.removeFromSuperview()
+        }
+        
+        if addedDrinks > 0 {
+            let addDrinkButton = SpringButton()
+            let addDrinkImage = UIImage(named: "refresh")
+            addDrinkButton.setImage(addDrinkImage, forState: .Normal)
+            //addDrinkButton.backgroundColor = UIColor(red: 0.97, green: 0.97, blue: 0.97, alpha: 1)
+            addDrinkButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+            //        addDrinkButton.layer.cornerRadius = 20
+            //        addDrinkButton.layer.shadowColor = UIColor.blackColor().colorWithAlphaComponent(0.5).CGColor
+            //        addDrinkButton.layer.shadowRadius = 3
+            //        addDrinkButton.layer.shadowOpacity = 0.5
+            //        addDrinkButton.layer.shadowOffset = CGSize(width: 3, height: 3)
+            addDrinkButton.center = CGPoint(x: buffer/3, y: buffer + 4*radius/3)
+            addDrinkButton.tag = 4
+            view.addSubview(addDrinkButton)
+            
+            addDrinkButton.addTarget(self, action: "removeAllDrinks", forControlEvents: .TouchUpInside)
+            
+            addDrinkButton.animation = "fadeIn"
+            addDrinkButton.duration = 1
+            addDrinkButton.curve = "spring"
+            addDrinkButton.animate()
+        }
+    }
+    
+    func addNewDrink() {
+        addedDrinks++
+        removeAnimatingViews()
+        configureBACProgress()
+        configureRefreshButton()
+    }
+    
+    func removeAllDrinks() {
+        addedDrinks = 0
+        removeAnimatingViews()
+        configureBACProgress()
+        configureRefreshButton()
     }
     
     func configureAlternativeButtons() {
@@ -164,13 +260,14 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
     
     func configureCarLabel() {
         let carImageView = SpringImageView()
-        if hoursToReachDrivingLimitOfAlcohol(Float(bac!)) > 0 {
+        if hoursToReachDrivingLimitOfAlcohol(Float(bac!), addedDrinks: addedDrinks) > 0 {
             carImageView.image = UIImage(named: "cab")
         } else {
             carImageView.image = UIImage(named: "car")
         }
         carImageView.sizeToFit()
         carImageView.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: 7*UIScreen.mainScreen().bounds.height/12)
+        carImageView.tag = 5
         view.addSubview(carImageView)
         
         carImageView.animation = "slideRight"
@@ -179,26 +276,45 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         carImageView.animate()
         
         let carLabel = SpringLabel()
-        carLabel.attributedText = stringOfTimeUntilRidOfAlcohol(hoursToReachDrivingLimitOfAlcohol(Float(bac!)))
+        carLabel.attributedText = stringOfTimeUntilRidOfAlcohol(hoursToReachDrivingLimitOfAlcohol(Float(bac!), addedDrinks: addedDrinks))
         carLabel.numberOfLines = 0
         carLabel.textAlignment = .Center
         carLabel.sizeToFit()
+        carLabel.tag = 6
         carLabel.center = CGPoint(x: UIScreen.mainScreen().bounds.width/2, y: 7*UIScreen.mainScreen().bounds.height/12 + 50)
         
         view.addSubview(carLabel)
         
     }
     
+    func removeAnimatingViews() {
+        if let currentView = view.viewWithTag(5) {
+            currentView.removeFromSuperview()
+        }
+        
+        if let currentView = view.viewWithTag(6) {
+            currentView.removeFromSuperview()
+        }
+    }
+    
     func circleEndFromBAC() -> Float {
-        return bac! / 0.12
+        
+        let refactoredBAC = bac! + additionalBACPerDrinkUnit() * Float(addedDrinks)
+        
+        guard refactoredBAC != 0 else {
+            return 0
+        }
+        
+        return refactoredBAC / 0.12
     }
     
     func circleColorFromBAC() -> UIColor {
         guard bac != nil else {
             return UIColor.clearColor()
         }
+        let refactoredBAC = bac! + additionalBACPerDrinkUnit() * Float(addedDrinks)
         
-        switch bac! {
+        switch refactoredBAC {
         case 0...0.04:
             return green
         case 0.04...0.08:
@@ -207,19 +323,21 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
             return red
         default:
             print("Error setting color of circle")
-            return UIColor.clearColor()
+            return red
         }
     }
     
     func openSMS() {
-        messageVC = MFMessageComposeViewController()
-        messageVC!.body = "Hey. I don't think I can drive tonight. Can you give me a ride?"
-        messageVC?.delegate = self
-        self.presentViewController(messageVC!, animated: true, completion: nil)
+        print("did present")
+        let messageVC = MFMessageComposeViewController()
+        messageVC.body = "Hey. I don't think I can drive tonight. Can you give me a ride?"
+        messageVC.messageComposeDelegate = self
+        self.presentViewController(messageVC, animated: true, completion: nil)
     }
     
     func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
-        controller.dismissViewControllerAnimated(true, completion: nil)
+        print("did finish")
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func openUber() {
@@ -243,7 +361,66 @@ class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, 
         loader.loaderColor = beerColor
         loader.backgroundColor = UIColor.clearColor()
         loader.loaderStrokeColor = UIColor.clearColor()
+        
+        self.performSelector("cancelLoader", withObject: nil, afterDelay: 3.5)
+        
+    }
+    
+    func cancelLoader() {
+        loader.removeLoader()
+        configureViews()
     }
 
 }
 
+extension ViewController {
+    /*
+    func authorizeHealthKit(completion: ((success:Bool, error:NSError!) -> Void)!)
+    {
+        // 1. Set the types you want to read from HK Store
+        let healthKitTypesToRead = Set(arrayLiteral:[
+            HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierDateOfBirth),
+            HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierBloodType),
+            HKObjectType.characteristicTypeForIdentifier(HKCharacteristicTypeIdentifierBiologicalSex),
+            HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMass),
+            HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierHeight),
+            HKObjectType.workoutType()
+            ])
+        
+        // 2. Set the types you want to write to HK Store
+        let healthKitTypesToWrite = [HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierBodyMassIndex), HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierActiveEnergyBurned), HKObjectType.quantityTypeForIdentifier(HKQuantityTypeIdentifierDistanceWalkingRunning), HKQuantityType.workoutType()]
+        
+        // 3. If the store is not available (for instance, iPad) return an error and don't go on.
+        if !HKHealthStore.isHealthDataAvailable()
+        {
+            let error = NSError(domain: "com.raywenderlich.tutorials.healthkit", code: 2, userInfo: [NSLocalizedDescriptionKey:"HealthKit is not available in this Device"])
+            if( completion != nil )
+            {
+                completion(success:false, error:error)
+            }
+            return;
+        }
+        
+        // 4.  Request HealthKit authorization
+        healthKitStore.requestAuthorizationToShareTypes(healthKitTypesToWrite, readTypes: healthKitTypesToRead) { (success, error) -> Void in
+            
+            if( completion != nil )
+            {
+                completion(success:success,error:error)
+            }
+        }
+    }
+    
+    healthManager.authorizeHealthKit { (authorized,  error) -> Void in
+    if authorized {
+    println("HealthKit authorization received.")
+    }
+    else
+    {
+    println("HealthKit authorization denied!")
+    if error != nil {
+    println("\(error)")
+    }
+    }
+    }*/
+}

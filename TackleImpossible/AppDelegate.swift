@@ -19,6 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, CLLocationManagerDelegate
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: "userGender")
+        NSUserDefaults.standardUserDefaults().setFloat(70, forKey: "userWeight")
+        
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: [UIUserNotificationType.Alert, UIUserNotificationType.Sound], categories: nil))
         
         locationManager.delegate = self
