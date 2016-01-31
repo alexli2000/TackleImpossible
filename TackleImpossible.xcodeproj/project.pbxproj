@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA07651C1C5DBB5A003F7016 /* beer120.svg in Resources */ = {isa = PBXBuildFile; fileRef = FA07651B1C5DBB5A003F7016 /* beer120.svg */; };
+		FA0765201C5DBB67003F7016 /* PocketSVG.m in Sources */ = {isa = PBXBuildFile; fileRef = FA07651F1C5DBB67003F7016 /* PocketSVG.m */; };
+		FA0765261C5DBBAA003F7016 /* FillableLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765211C5DBBAA003F7016 /* FillableLoader.swift */; };
+		FA0765271C5DBBAA003F7016 /* PlainLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765221C5DBBAA003F7016 /* PlainLoader.swift */; };
+		FA0765281C5DBBAA003F7016 /* RoundedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765231C5DBBAA003F7016 /* RoundedLoader.swift */; };
+		FA0765291C5DBBAA003F7016 /* SpikeLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765241C5DBBAA003F7016 /* SpikeLoader.swift */; };
+		FA07652A1C5DBBAA003F7016 /* WavesLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0765251C5DBBAA003F7016 /* WavesLoader.swift */; };
 		FAB48C821C5D4780009D2615 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB48C811C5D4780009D2615 /* AppDelegate.swift */; };
 		FAB48C841C5D4780009D2615 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAB48C831C5D4780009D2615 /* ViewController.swift */; };
 		FAB48C871C5D4780009D2615 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAB48C851C5D4780009D2615 /* Main.storyboard */; };
@@ -98,6 +105,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA07651B1C5DBB5A003F7016 /* beer120.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = beer120.svg; sourceTree = "<group>"; };
+		FA07651D1C5DBB66003F7016 /* TackleImpossible-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "TackleImpossible-Bridging-Header.h"; sourceTree = "<group>"; };
+		FA07651E1C5DBB67003F7016 /* PocketSVG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PocketSVG.h; sourceTree = "<group>"; };
+		FA07651F1C5DBB67003F7016 /* PocketSVG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PocketSVG.m; sourceTree = "<group>"; };
+		FA0765211C5DBBAA003F7016 /* FillableLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FillableLoader.swift; sourceTree = "<group>"; };
+		FA0765221C5DBBAA003F7016 /* PlainLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlainLoader.swift; sourceTree = "<group>"; };
+		FA0765231C5DBBAA003F7016 /* RoundedLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedLoader.swift; sourceTree = "<group>"; };
+		FA0765241C5DBBAA003F7016 /* SpikeLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpikeLoader.swift; sourceTree = "<group>"; };
+		FA0765251C5DBBAA003F7016 /* WavesLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WavesLoader.swift; sourceTree = "<group>"; };
 		FAB48C7E1C5D4780009D2615 /* TackleImpossible.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TackleImpossible.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAB48C811C5D4780009D2615 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FAB48C831C5D4780009D2615 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -230,8 +246,6 @@
 				FAB48C831C5D4780009D2615 /* ViewController.swift */,
 				FAB48CF61C5D4831009D2615 /* Utilities.swift */,
 				FAB48D341C5D676D009D2615 /* Resources */,
-				FAB48CF81C5D5C04009D2615 /* Spring */,
-				FAB48CAF1C5D47A0009D2615 /* NVActivityIndicatorView */,
 			);
 			path = TackleImpossible;
 			sourceTree = "<group>";
@@ -344,11 +358,22 @@
 		FAB48D341C5D676D009D2615 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FAB48CF81C5D5C04009D2615 /* Spring */,
+				FAB48CAF1C5D47A0009D2615 /* NVActivityIndicatorView */,
+				FA07651B1C5DBB5A003F7016 /* beer120.svg */,
 				FAB48C811C5D4780009D2615 /* AppDelegate.swift */,
 				FAB48C881C5D4780009D2615 /* Assets.xcassets */,
 				FAB48C8A1C5D4780009D2615 /* LaunchScreen.storyboard */,
 				FAB48C8D1C5D4780009D2615 /* Info.plist */,
 				FAB48C851C5D4780009D2615 /* Main.storyboard */,
+				FA07651E1C5DBB67003F7016 /* PocketSVG.h */,
+				FA07651F1C5DBB67003F7016 /* PocketSVG.m */,
+				FA0765211C5DBBAA003F7016 /* FillableLoader.swift */,
+				FA0765221C5DBBAA003F7016 /* PlainLoader.swift */,
+				FA0765231C5DBBAA003F7016 /* RoundedLoader.swift */,
+				FA0765241C5DBBAA003F7016 /* SpikeLoader.swift */,
+				FA0765251C5DBBAA003F7016 /* WavesLoader.swift */,
+				FA07651D1C5DBB66003F7016 /* TackleImpossible-Bridging-Header.h */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -469,6 +494,7 @@
 				FAB48D261C5D5C04009D2615 /* LoadingView.xib in Resources */,
 				FAB48D231C5D5C04009D2615 /* Info.plist in Resources */,
 				FAB48C871C5D4780009D2615 /* Main.storyboard in Resources */,
+				FA07651C1C5DBB5A003F7016 /* beer120.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -493,9 +519,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA07652A1C5DBBAA003F7016 /* WavesLoader.swift in Sources */,
 				FAB48CDE1C5D47A0009D2615 /* NVActivityIndicatorAnimationBallRotateChase.swift in Sources */,
 				FAB48D2F1C5D5C04009D2615 /* SpringTextView.swift in Sources */,
 				FAB48CEE1C5D47A0009D2615 /* NVActivityIndicatorAnimationPacman.swift in Sources */,
+				FA0765281C5DBBAA003F7016 /* RoundedLoader.swift in Sources */,
 				FAB48CEC1C5D47A0009D2615 /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */,
 				FAB48CD41C5D47A0009D2615 /* NVActivityIndicatorAnimationBallBeat.swift in Sources */,
 				FAB48D301C5D5C04009D2615 /* SpringView.swift in Sources */,
@@ -518,6 +546,8 @@
 				FAB48D2B1C5D5C04009D2615 /* SpringButton.swift in Sources */,
 				FAB48D271C5D5C04009D2615 /* Misc.swift in Sources */,
 				FAB48D181C5D5C04009D2615 /* AsyncImageView.swift in Sources */,
+				FA0765261C5DBBAA003F7016 /* FillableLoader.swift in Sources */,
+				FA0765291C5DBBAA003F7016 /* SpikeLoader.swift in Sources */,
 				FAB48CD61C5D47A0009D2615 /* NVActivityIndicatorAnimationBallClipRotateMultiple.swift in Sources */,
 				FAB48D1A1C5D5C04009D2615 /* BlurView.swift in Sources */,
 				FAB48CE61C5D47A0009D2615 /* NVActivityIndicatorAnimationBallZigZagDeflect.swift in Sources */,
@@ -531,6 +561,7 @@
 				FAB48D311C5D5C04009D2615 /* TransitionManager.swift in Sources */,
 				FAB48D1E1C5D5C04009D2615 /* DesignableTabBarController.swift in Sources */,
 				FAB48D171C5D5C04009D2615 /* AsyncButton.swift in Sources */,
+				FA0765271C5DBBAA003F7016 /* PlainLoader.swift in Sources */,
 				FAB48CF51C5D47A0009D2615 /* NVActivityIndicatorView.swift in Sources */,
 				FAB48CDD1C5D47A0009D2615 /* NVActivityIndicatorAnimationBallRotate.swift in Sources */,
 				FAB48CE41C5D47A0009D2615 /* NVActivityIndicatorAnimationBallTrianglePath.swift in Sources */,
@@ -553,6 +584,7 @@
 				FAB48CE71C5D47A0009D2615 /* NVActivityIndicatorAnimationBlank.swift in Sources */,
 				FAB48CF01C5D47A0009D2615 /* NVActivityIndicatorAnimationSquareSpin.swift in Sources */,
 				FAB48CED1C5D47A0009D2615 /* NVActivityIndicatorAnimationLineSpinFadeLoader.swift in Sources */,
+				FA0765201C5DBB67003F7016 /* PocketSVG.m in Sources */,
 				FAB48D2A1C5D5C04009D2615 /* SpringAnimation.swift in Sources */,
 				FAB48CF31C5D47A0009D2615 /* NVActivityIndicatorAnimationDelegate.swift in Sources */,
 				FAB48CDB1C5D47A0009D2615 /* NVActivityIndicatorAnimationBallPulseRise.swift in Sources */,
@@ -695,11 +727,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = TackleImpossible/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexli.TackleImpossible;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TackleImpossible/TackleImpossible-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -707,11 +742,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = TackleImpossible/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.alexli.TackleImpossible;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "TackleImpossible/TackleImpossible-Bridging-Header.h";
 			};
 			name = Release;
 		};
@@ -782,6 +819,7 @@
 				FAB48CA81C5D4780009D2615 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FAB48CA91C5D4780009D2615 /* Build configuration list for PBXNativeTarget "TackleImpossibleTests" */ = {
 			isa = XCConfigurationList;
@@ -790,6 +828,7 @@
 				FAB48CAB1C5D4780009D2615 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FAB48CAC1C5D4780009D2615 /* Build configuration list for PBXNativeTarget "TackleImpossibleUITests" */ = {
 			isa = XCConfigurationList;
@@ -798,6 +837,7 @@
 				FAB48CAE1C5D4780009D2615 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

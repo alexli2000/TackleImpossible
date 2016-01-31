@@ -9,13 +9,18 @@
 import UIKit
 import MessageUI
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, MFMessageComposeViewControllerDelegate, UINavigationControllerDelegate {
 
     let radius = 3*UIScreen.mainScreen().bounds.width/10
     let buffer = UIScreen.mainScreen().bounds.width/4
     
     var bac:Float?
-        
+    
+    let path = PocketSVG.pathFromSVGFileNamed("beer120").takeUnretainedValue()
+    var loader = FillableLoader()
+    
+    var messageVC:MFMessageComposeViewController?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -23,7 +28,11 @@ class ViewController: UIViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         view.backgroundColor = UIColor(red: 0.95, green: 0.95, blue: 0.95, alpha: 1)
-        bac = 0.041
+        bac = 0.07
+        configureViews()
+    }
+    
+    func configureViews() {
         configureBACBackground()
         configureBACProgress()
         configureAlternativeButtons()
@@ -203,9 +212,14 @@ class ViewController: UIViewController {
     }
     
     func openSMS() {
-        let messageVC = MFMessageComposeViewController()
-        messageVC.body = "Hey. I don't think I can drive tonight. Can you give me a ride?"
-        self.presentViewController(messageVC, animated: true, completion: nil)
+        messageVC = MFMessageComposeViewController()
+        messageVC!.body = "Hey. I don't think I can drive tonight. Can you give me a ride?"
+        messageVC?.delegate = self
+        self.presentViewController(messageVC!, animated: true, completion: nil)
+    }
+    
+    func messageComposeViewController(controller: MFMessageComposeViewController, didFinishWithResult result: MessageComposeResult) {
+        controller.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func openUber() {
@@ -222,6 +236,13 @@ class ViewController: UIViewController {
         {
             UIApplication.sharedApplication().openURL(url!)
         }
+    }
+    
+    func presentLoader() {
+        loader = WavesLoader.showLoaderWithPath(path, onView: view)
+        loader.loaderColor = beerColor
+        loader.backgroundColor = UIColor.clearColor()
+        loader.loaderStrokeColor = UIColor.clearColor()
     }
 
 }

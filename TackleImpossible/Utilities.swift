@@ -13,6 +13,7 @@ let minimumSafePercentOfAlcohol:Float = 0.04
 let green = UIColor(red: 0.52, green: 0.63, blue: 0.45, alpha: 1)
 let yellow = UIColor(red: 0.9, green: 0.84, blue: 0.46, alpha: 1)
 let red = UIColor(red: 0.86, green: 0.28, blue: 0.28, alpha: 1)
+let beerColor = UIColor(red: 0.78, green: 0.53, blue: 0.16, alpha: 1)
 
 func hoursToRidBodyOfAlcohol(bac:Float) -> Float {
     return bac/0.015
